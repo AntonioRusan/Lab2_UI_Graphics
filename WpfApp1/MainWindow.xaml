@@ -98,9 +98,9 @@
                 </StackPanel>
             </StackPanel>
 
-            <Button Click="LoadDataFromControls_Click" Content="RawData from Controls" HorizontalAlignment="Left" Margin="10,165,0,0" Grid.Row="1" VerticalAlignment="Top" Height="37" Width="166"/>
-            <Button Name="btnSaveFile" Content="Save" Click="SaveFile_Click" HorizontalAlignment="Left" Margin="10,220,0,0" Grid.Row="1" VerticalAlignment="Top" Width="165" Height="34"/>
-            <Button Name="btnLoadFile" Content="RawData from File" Click="LoadFile_Click" HorizontalAlignment="Right" Margin="10,165,10,0" Grid.Row="1" VerticalAlignment="Top" Width="165" Height="34"/>
+            <Button Click="LoadDataFromControls_Click" Content="RawData from Controls" HorizontalAlignment="Left" Margin="10,165,0,0" Grid.Row="1" VerticalAlignment="Top" Height="35" Width="166"/>
+            <Button Name="btnSaveFile" Content="Save" Click="SaveFile_Click" HorizontalAlignment="Left" Margin="10,220,0,0" Grid.Row="1" VerticalAlignment="Top" Width="165" Height="35"/>
+            <Button Name="btnLoadFile" Content="RawData from File" Click="LoadFile_Click" HorizontalAlignment="Right" Margin="10,165,10,0" Grid.Row="1" VerticalAlignment="Top" Width="165" Height="35"/>
 
             <ListBox Name="rawDataListBox" Grid.Column="1" Margin="0, 5, 5, 5"/>
             <ListBox Name="splineDataListBox" Grid.Column="1" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="0, 5, 5, 160">
