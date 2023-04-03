@@ -91,42 +91,50 @@ namespace WpfApp1
             {
                 rawData.Save(filename);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                MessageBox.Show(ex.Message);
-            }
-        }
-        public void Load(string filename)
-        {
-            try
-            {
-                RawData tmpRawData = null;
-                RawData.Load(filename, out tmpRawData);
-                rawData = tmpRawData;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
+                throw;
             }
         }
         public void loadFromControls()
         {
-            FRaw fRaw = enumToFunc(fRawEnum);
-            rawData = new RawData(LeftBound, RightBound, RawNumOfNodes, IsUniformGrid, fRaw);
+            try
+            {
+                FRaw fRaw = enumToFunc(fRawEnum);
+                rawData = new RawData(LeftBound, RightBound, RawNumOfNodes, IsUniformGrid, fRaw);
+            }
+            catch (Exception)
+            {
+                throw new Exception("Неправильный формат ввода!"); ;
+            }
         }
         public void loadFromFile(string filename)
         {
-            rawData = new RawData(filename);
-            LeftBound = rawData.LeftBound;
-            RightBound = rawData.RightBound;
-            RawNumOfNodes = rawData.NumOfNodes;
-            IsUniformGrid = rawData.IsUniformGrid;
-            FRawEnum = funcToEnum(rawData.fRaw);
+            try
+            {
+                rawData = new RawData(filename);
+                LeftBound = rawData.LeftBound;
+                RightBound = rawData.RightBound;
+                RawNumOfNodes = rawData.NumOfNodes;
+                IsUniformGrid = rawData.IsUniformGrid;
+                FRawEnum = funcToEnum(rawData.fRaw);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
         public int computeSpline()
         {
-            splineData = new SplineData(rawData, LeftFirstDerivative, RightFirstDerivative, SplineNumOfNodes);
-            return splineData.CreateSpline();
+            try
+            {
+                splineData = new SplineData(rawData, LeftFirstDerivative, RightFirstDerivative, SplineNumOfNodes);
+                return splineData.CreateSpline();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
         public FRaw enumToFunc(FRawEnum fRawEnum)
         {

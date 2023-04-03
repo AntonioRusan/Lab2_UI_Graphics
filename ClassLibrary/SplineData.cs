@@ -49,7 +49,7 @@ namespace ClassLibrary
             double[] rlim = new double[1] { InputRawData.RightBound };
             double[] resultInteg = new double[ny * nlim];
 
-            int ret = 111;
+            int ret = -1;
             try
             {
                 CubicSplineInterpoalte(nx, x, ny, y, isUniform, bc, scoeff, nsite, site, ndorder, dorder, resultDeriv, nlim, llim, rlim, resultInteg, ref ret);
@@ -81,7 +81,8 @@ namespace ClassLibrary
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                throw ex;
+                //Console.WriteLine(ex);
                 return ret;
             }
         }

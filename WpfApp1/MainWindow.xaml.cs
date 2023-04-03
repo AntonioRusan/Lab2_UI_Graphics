@@ -33,29 +33,57 @@ namespace WpfApp1
         }
         private void LoadDataFromControls_Click(object sender, RoutedEventArgs e)
         {
-            viewData.loadFromControls();
-            int result = viewData.computeSpline();
-            FillUIWithData();
+            try
+            {
+                viewData.loadFromControls();
+                int result = viewData.computeSpline();
+                FillUIWithData();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void SaveFile_Click(object sender, RoutedEventArgs e)
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            if (saveFileDialog.ShowDialog() == true)
-                viewData.rawData.Save(saveFileDialog.FileName);
+            try
+            {
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                if (saveFileDialog.ShowDialog() == true)
+                    viewData.rawData.Save(saveFileDialog.FileName);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void LoadFile_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            if (openFileDialog.ShowDialog() == true)
-                viewData.loadFromFile(openFileDialog.FileName);
-            int result = viewData.computeSpline();
-            FillUIWithData();
+            try
+            {
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                if (openFileDialog.ShowDialog() == true)
+                    viewData.loadFromFile(openFileDialog.FileName);
+                int result = viewData.computeSpline();
+                FillUIWithData();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void FillUIWithData()
         {
-            rawDataListBox.ItemsSource = viewData.rawData;
-            splineDataListBox.ItemsSource = viewData.splineData.SplineItemList;
-            integralTextBlock.Text = viewData.splineData.Integral.ToString();
+            try
+            {
+                rawDataListBox.ItemsSource = viewData.rawData;
+                splineDataListBox.ItemsSource = viewData.splineData.SplineItemList;
+                integralTextBlock.Text = viewData.splineData.Integral.ToString();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }

@@ -102,7 +102,8 @@ namespace ClassLibrary
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Exception loading from file: {ex.Message}");
+                throw new Exception("Неправильный формат файла!");
+                //Console.WriteLine($"Exception loading from file: {ex.Message}");
             }
             finally
             {
@@ -126,7 +127,8 @@ namespace ClassLibrary
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Exception saving to file: {ex.Message}");
+                throw new Exception("Неправильный формат файла!"); ;
+                //Console.WriteLine($"Exception saving to file: {ex.Message}");
             }
             finally
             {
