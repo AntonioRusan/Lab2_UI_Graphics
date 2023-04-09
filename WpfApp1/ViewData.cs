@@ -193,8 +193,8 @@ namespace WpfApp1
                         }
                         break;
                 }
-                if (error != String.Empty)
-                    MessageBox.Show(error);
+                /*if (error != String.Empty)
+                    MessageBox.Show(error);*/
                 return error;
             }
         }

@@ -60,7 +60,8 @@ namespace ClassLibrary
                     Values[i] = fraw(Nodes[i]);
                 }
             }
-            zipNodeValue = Nodes.Zip(Values, (node, value) => $"Coordinate: {node}\tValue: {value}");
+            string format = "{0:0.000}";
+            zipNodeValue = Nodes.Zip(Values, (node, value) => $"Coordinate: {String.Format(format, node)}\tValue: {String.Format(format, value)}");
         }
 
         public RawData(string filename)
@@ -98,7 +99,8 @@ namespace ClassLibrary
                     Values[i] = Convert.ToDouble(fileValues[1]);
                     i++;
                 }
-                zipNodeValue = Nodes.Zip(Values, (node, value) => $"Coordinate: {node}\tValue: {value}");
+                string format = "{0:0.000}";
+                zipNodeValue = Nodes.Zip(Values, (node, value) => $"Coordinate: {String.Format(format, node)}\tValue: {String.Format(format, value)}");
             }
             catch (Exception ex)
             {

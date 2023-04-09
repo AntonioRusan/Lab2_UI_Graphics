@@ -14,7 +14,16 @@
         <local:DoubleTextBoxConverter x:Key="doubleTextBoxConverter" />
         <system:Boolean x:Key="True">True</system:Boolean>
         <system:Boolean x:Key="False">False</system:Boolean>
-        
+        <Style TargetType="TextBox">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="True">
+                    <Setter Property="ToolTip"
+                Value="{Binding RelativeSource={RelativeSource Self},
+                    Path=(Validation.Errors)[0].ErrorContent}" />
+                    <Setter Property="Foreground" Value="Red" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
     <Window.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Save" 
@@ -158,13 +167,13 @@
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Row="0" Grid.Column="0" Text="Coordinate: "/>
-                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Path=Coordinate}" />
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Path=Coordinate, StringFormat={}{0:0.000}}"/>
                             <TextBlock Grid.Row="1" Grid.Column="0" Text="     SplineValue: " />
-                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Path=SplineValue}"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Path=SplineValue, StringFormat={}{0:0.000}}"/>
                             <TextBlock Grid.Row="2" Grid.Column="0" Text="     FirstDerivative: "/>
-                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Path=FirstDerivative}"/>
+                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Path=FirstDerivative, StringFormat={}{0:0.000}}"/>
                             <TextBlock Grid.Row="3" Grid.Column="0" Text="     SecondDerivative: "/>
-                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Path=SecondDerivative}"/>
+                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Path=SecondDerivative, StringFormat={}{0:0.000}}"/>
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
