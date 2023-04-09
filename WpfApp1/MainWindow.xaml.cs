@@ -23,7 +23,11 @@ namespace WpfApp1
     public partial class MainWindow : Window
     {
         ViewData viewData = new ViewData();
+        public OxyPlotModel oxyPlotMod;
 
+        public static RoutedCommand LoadFromControlsCommand = new RoutedCommand("LoadFromControls", typeof(MainWindow));
+        public static RoutedCommand LoadFromFileCommand = new RoutedCommand("LoadFromFile", typeof(MainWindow));
+        public static RoutedCommand ComputeSplineCommand = new RoutedCommand("ComputeSpline", typeof(MainWindow));
         public MainWindow()
         {
             InitializeComponent();
@@ -83,6 +87,75 @@ namespace WpfApp1
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+            }
+        }
+        private void TextBox_Error(object sender, ValidationErrorEventArgs e)
+        {
+            MessageBox.Show(e.Error.ErrorContent.ToString());
+        }
+
+        private void SaveCommandHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            SaveFile_Click(sender, e);
+        }
+        private void CanSaveCommandHandler(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = !(Validation.GetHasError(RawBounds) || Validation.GetHasError(RawNumOfNodes)) && (viewData.rawData != null);
+        }
+
+        private void LoadFromControlsCommandHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            LoadDataFromControls_Click(sender, e);
+            drawSpline();
+        }
+        private void CanLoadFromControlsCommandHandler(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = !(Validation.GetHasError(RawBounds) || Validation.GetHasError(RawNumOfNodes) || Validation.GetHasError(SplineNumOfNodes));
+        }
+
+        private void LoadFromFileCommandHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            try
+            {
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                if (openFileDialog.ShowDialog() == true)
+                    viewData.loadFromFile(openFileDialog.FileName);
+                ComputeSplineCommand.Execute(sender, null);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private void CanLoadFromFileCommandHandler(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = !(Validation.GetHasError(SplineNumOfNodes));
+        }
+
+        private void ComputeSplineCommandHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            int result = viewData.computeSpline();
+            FillUIWithData();
+            drawSpline();
+        }
+        private void CanComputeSplineCommandHandler(object sender, CanExecuteRoutedEventArgs e)
+        {
+            bool rb = Validation.GetHasError(RawBounds);
+            bool rn = Validation.GetHasError(RawNumOfNodes);
+            bool sn = Validation.GetHasError(SplineNumOfNodes);
+            e.CanExecute = !(Validation.GetHasError(RawBounds) || Validation.GetHasError(RawNumOfNodes) || Validation.GetHasError(SplineNumOfNodes)) && (viewData.rawData != null);
+        }
+
+        private void drawSpline()
+        {
+            try
+            {
+                oxyPlotMod = new OxyPlotModel(viewData.splineData);
+                OxyPlot.DataContext = oxyPlotMod;
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show($"шибка отрисовки сплайна\n" + ex.Message);
             }
         }
     }
