@@ -8,12 +8,11 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace WpfApp1
 {
-    internal class ViewData: INotifyPropertyChanged, IDataErrorInfo
+    internal class ViewData: INotifyPropertyChanged
     {
         private double leftBound;
         private double rightBound;
@@ -82,7 +81,6 @@ namespace WpfApp1
             leftBound = 0;
             rightBound = 1;
             rawNumOfNodes = 2;
-            SplineNumOfNodes = 2;
             isUniformGrid = true;
             rawData = new RawData(0, 1, 2, true, CreationFunctions.LinearFunc);
             splineData = null;
@@ -107,7 +105,7 @@ namespace WpfApp1
             }
             catch (Exception)
             {
-                throw new Exception("Неправильный формат ввода!");
+                throw new Exception("Неправильный формат ввода!"); ;
             }
         }
         public void loadFromFile(string filename)
@@ -161,43 +159,5 @@ namespace WpfApp1
             };
             return fRawEnum;
         }
-        public string this[string columnName]
-        {
-            get
-            {
-                string error = String.Empty;
-                switch (columnName)
-                {
-                    case "RawNumOfNodes":
-                        if (RawNumOfNodes < 2)
-                        {
-                            error = "Число узлов сплайна должно быть больше или равно 2!";
-                        }
-                        break;
-                    case "SplineNumOfNodes":
-                        if (SplineNumOfNodes < 2)
-                        {
-                            error = "Число узлов равномерной сетки для значений сплайна должно быть больше или равно 2!";
-                        }
-                        break;
-                    case "LeftBound":
-                        if (LeftBound > RightBound)
-                        {
-                            error = "Левый конец отрезка интерполяции должен быть меньше, чем правый!";
-                        }
-                        break;
-                    case "RightBound":
-                        if (LeftBound > RightBound)
-                        {
-                            error = "Правый конец отрезка интерполяции должен быть меньше, чем левый!";
-                        }
-                        break;
-                }
-                if (error != String.Empty)
-                    MessageBox.Show(error);
-                return error;
-            }
-        }
-        public string Error { get; }
     }
 }

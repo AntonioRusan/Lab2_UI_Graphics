@@ -3,10 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:oxy="http://oxyplot.org/wpf"
         xmlns:local="clr-namespace:WpfApp1" xmlns:system="clr-namespace:System;assembly=netstandard"
         mc:Ignorable="d"
-        Title="MainWindow" Height="457" Width="1144">
+        Title="MainWindow" Height="473" Width="800">
     <Window.Resources>
         <local:RadioButtonConverter x:Key="radioButtonConverter" />
         <local:BoundsTextBoxConverter x:Key="boundsTextBoxConverter" />
@@ -14,40 +13,24 @@
         <local:DoubleTextBoxConverter x:Key="doubleTextBoxConverter" />
         <system:Boolean x:Key="True">True</system:Boolean>
         <system:Boolean x:Key="False">False</system:Boolean>
-        
     </Window.Resources>
-    <Window.CommandBindings>
-        <CommandBinding Command="ApplicationCommands.Save" 
-                        Executed="SaveCommandHandler"
-                        CanExecute="CanSaveCommandHandler"/>
-        <CommandBinding Command="{x:Static local:MainWindow.LoadFromControlsCommand}"
-                        Executed="LoadFromControlsCommandHandler"
-                        CanExecute="CanLoadFromControlsCommandHandler" />
-        <CommandBinding Command="{x:Static local:MainWindow.LoadFromFileCommand}"
-                        Executed="LoadFromFileCommandHandler"
-                        CanExecute="CanLoadFromFileCommandHandler" />
-        <CommandBinding Command="{x:Static local:MainWindow.ComputeSplineCommand}"
-                        Executed="ComputeSplineCommandHandler"
-                        CanExecute="CanComputeSplineCommandHandler" />
-    </Window.CommandBindings>
     <Grid>
         <Menu VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="14">
             <MenuItem Header="File">
-                <MenuItem Header="Save" Command="ApplicationCommands.Save" CommandParameter="From MenuItem"></MenuItem>
-                <MenuItem Header="Execute">
-                    <MenuItem Header="RawData from Controls" Command="{x:Static local:MainWindow.LoadFromControlsCommand}" CommandParameter="From MenuItem"></MenuItem>
-                    <MenuItem Header="RawData from File" Command="{x:Static local:MainWindow.LoadFromFileCommand}" CommandParameter="From MenuItem"></MenuItem>
-                </MenuItem>
+                <MenuItem Header="Save" Click="SaveFile_Click"></MenuItem>
+            </MenuItem>
+            <MenuItem Header="Execute">
+                <MenuItem Header="RawData from Controls" Click="LoadDataFromControls_Click"></MenuItem>
+                <MenuItem Header="RawData from File" Click="LoadFile_Click"></MenuItem>
             </MenuItem>
         </Menu>
-        <Grid Name="InputData">
+        <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.5*"/>
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.9*"/>
-                <ColumnDefinition Width="0.9*"/>
+                <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
             <StackPanel Margin="10, 30, 10, 0" Orientation="Horizontal">
@@ -56,42 +39,27 @@
                     <TextBox Name="RawBounds" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="119" Grid.Column="0" Height="23">
                         <TextBox.Text>
                             <MultiBinding Converter="{StaticResource boundsTextBoxConverter}">
-                                <Binding Path="LeftBound">
-                                    <Binding.ValidationRules>
-                                        <DataErrorValidationRule/>
-                                    </Binding.ValidationRules>
-                                </Binding>
-                                <Binding Path="RightBound">
-                                    <Binding.ValidationRules>
-                                        <DataErrorValidationRule/>
-                                    </Binding.ValidationRules>
-                                </Binding>
+                                <Binding Path="LeftBound"/>
+                                <Binding Path="RightBound"/>
                             </MultiBinding>
                         </TextBox.Text>
                     </TextBox>
                     <Label Content="Число узлов" HorizontalAlignment="Left"  VerticalAlignment="Top" Grid.Column="0"/>
-                    <TextBox Name="RawNumOfNodes" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.Column="0">
-                        <TextBox.Text>
-                            <Binding Path="RawNumOfNodes" Converter="{StaticResource integerTextBoxConverter}">
-                                <Binding.ValidationRules>
-                                    <DataErrorValidationRule/>
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </TextBox.Text>
-                    </TextBox>
+                    <TextBox Name="RawNumOfNodes" Text="{Binding RawNumOfNodes, Converter={StaticResource integerTextBoxConverter}}" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.Column="0"/>
+
                 </StackPanel>
                 <StackPanel Width="190">
                     <Label Content="Сетка" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="4.085,-2.548"/>
                     <StackPanel Orientation="Horizontal">
                         <StackPanel.Resources>
                             <Style TargetType="{x:Type RadioButton}">
-                                <Setter Property="Margin" Value="0,0,10,0"/>
+                                <Setter Property="Margin" Value="0,0,30,0"/>
                             </Style>
                         </StackPanel.Resources>
                         <RadioButton Name="UniformRB" Content="Uniform" HorizontalAlignment="Left" VerticalAlignment="Top"
                              IsChecked="{Binding Path=IsUniformGrid, Converter={StaticResource radioButtonConverter}, ConverterParameter={StaticResource True}}"/>
-                        <RadioButton x:Name="NonUniformRB" Content="NonUniform"
-                             IsChecked="{Binding IsUniformGrid, ConverterParameter={StaticResource False}, Converter={StaticResource radioButtonConverter}}"/>
+                        <RadioButton Name="NonUniformRB" Content="NonUniform" HorizontalAlignment="Right" VerticalAlignment="Top"
+                             IsChecked="{Binding Path=IsUniformGrid, Converter={StaticResource radioButtonConverter}, ConverterParameter={StaticResource False}}"/>
                     </StackPanel>
                     <StackPanel>
                         <Label Content="Функция:" HorizontalAlignment="Left"/>
@@ -108,15 +76,7 @@
                 </StackPanel.Resources>
                 <StackPanel>
                     <Label Content="Число узлов сетки" HorizontalAlignment="Left" Grid.Row="1" VerticalAlignment="Top"/>
-                    <TextBox Name ="SplineNumOfNodes" HorizontalAlignment="Left" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Width="120">
-                        <TextBox.Text>
-                            <Binding Path="SplineNumOfNodes" Converter="{StaticResource integerTextBoxConverter}">
-                                <Binding.ValidationRules>
-                                    <DataErrorValidationRule/>
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </TextBox.Text>
-                    </TextBox>
+                    <TextBox Name ="SplineNumOfNodes" Text="{Binding SplineNumOfNodes, Converter={StaticResource integerTextBoxConverter}}" HorizontalAlignment="Left" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
                 </StackPanel>
                 <StackPanel>
                     <Label Content="Первая производная:" HorizontalAlignment="Left" Grid.Row="1" VerticalAlignment="Top"/>
@@ -138,12 +98,12 @@
                 </StackPanel>
             </StackPanel>
 
-            <Button Content="RawData from Controls" HorizontalAlignment="Left" Margin="10,165,0,0" Grid.Row="1" VerticalAlignment="Top" Height="35" Width="166" Command="{x:Static local:MainWindow.LoadFromControlsCommand}" CommandParameter="From Button"/>
-            <Button Name="btnSaveFile" Content="Save"  HorizontalAlignment="Left" Margin="10,220,0,0" Grid.Row="1" VerticalAlignment="Top" Width="165" Height="35" Command="ApplicationCommands.Save" CommandParameter="From Button" />
-            <Button Name="btnLoadFile" Content="RawData from File" HorizontalAlignment="Right" Margin="10,165,10,0" Grid.Row="1" VerticalAlignment="Top" Width="165" Height="35" Command="{x:Static local:MainWindow.LoadFromFileCommand}" CommandParameter="From Button"/>
+            <Button Click="LoadDataFromControls_Click" Content="RawData from Controls" HorizontalAlignment="Left" Margin="10,165,0,0" Grid.Row="1" VerticalAlignment="Top" Height="35" Width="166"/>
+            <Button Name="btnSaveFile" Content="Save" Click="SaveFile_Click" HorizontalAlignment="Left" Margin="10,220,0,0" Grid.Row="1" VerticalAlignment="Top" Width="165" Height="35"/>
+            <Button Name="btnLoadFile" Content="RawData from File" Click="LoadFile_Click" HorizontalAlignment="Right" Margin="10,165,10,0" Grid.Row="1" VerticalAlignment="Top" Width="165" Height="35"/>
 
-            <ListBox Name="rawDataListBox" Grid.Column="1" Margin="5, 5, 5, 5"/>
-            <ListBox Name="splineDataListBox" Grid.Column="1" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="5, 5, 5, 160">
+            <ListBox Name="rawDataListBox" Grid.Column="1" Margin="0, 5, 5, 5"/>
+            <ListBox Name="splineDataListBox" Grid.Column="1" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="0, 5, 5, 160">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid>
@@ -169,14 +129,12 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <TextBlock Name="selectedSplineDataItemTextBlock" Text="{Binding ElementName=splineDataListBox, Path=SelectedItem}" Grid.Column="1" HorizontalAlignment="Center" Margin="0,154,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Height="85" Width="330"/>
+            <TextBlock Name="selectedSplineDataItemTextBlock" Text="{Binding ElementName=splineDataListBox, Path=SelectedItem}" Grid.Column="1" HorizontalAlignment="Center" Margin="0,155,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Height="84" Width="388"/>
 
             <Label Grid.Column="1" Content="Интеграл:" HorizontalAlignment="Left" Margin="9,244,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="0.622,1.508"/>
             <TextBlock Name="integralTextBlock" Grid.Column="1" HorizontalAlignment="Left" Margin="78,249,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Width="200"/>
 
-            <Grid Name ="OxyPlot" Grid.Column="1" Grid.ColumnSpan="2" Margin="367,0,0,1" Grid.RowSpan="2" >
-                <oxy:PlotView Model="{Binding plotModel}"/>
-            </Grid>
+
 
 
 
